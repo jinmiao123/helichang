@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>参数</title>
+</head>
+<body>
+    <a href="__ROOT__/admin/TypeList/add">添加类型</a><br/>
+    {volist name='type' id='vo'}
+    类型id：{$vo['typeid']}
+    类型名：{$vo['typename']}
+    方法：{$vo['function']}
+    备注：{$vo['note']}<br/>
+    <a href="__ROOT__/admin/TypeList/add2?typeid={$vo['typeid']}">添加参数</a><br/>
+    {volist name="vo['params']" id='vi'}
+        参数名：{$vi['paramname']}<br/>
+        参数id：{$vi['id']}<br/>
+        <a href="__ROOT__/admin/TypeList/edit2?id={$vi['id']}&typeid={$vo['typeid']}&paramname={$vi['paramname']}">编辑</a>
+        <a href="__ROOT__/admin/TypeList/delType?id={$vi['id']}">删除</a><br/>
+    {/volist}
+    <a href="__ROOT__/admin/TypeList/edit?typeid={$vo['typeid']}&typename={$vo['typename']}&function={$vo['function']}&note={$vo['note']}">编辑</a>
+    <a href="__ROOT__/admin/TypeList/delType?typeid={$vo['typeid']}">删除</a><br/>
+    {/volist}
+</body>
+</html>

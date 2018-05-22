@@ -1,0 +1,20 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>资讯</title>
+</head>
+<body>
+      <a href="__ROOT__/admin/Articlelist/add">添加</a>
+      {volist name='article' id='vo'}
+      <h1>{$vo['title']}</h1>
+      简介：{$vo['description']} <br/>
+      关键字：{$vo['keywords']} <br/>
+      作者：{$vo['author']} <br/>
+      时间：{$vo['inputtime']}<br/>
+      来源：{$vo['copyfrom']}<br/>
+      缩略图：<img src="__ROOT__/uploads/{$vo['thumbnail']}" style="width: 50px;"/><br/>
+      <a href="__ROOT__/admin/Articlelist/edit?id={$vo['id']}">编辑</a>
+      <a href="__ROOT__/admin/Articlelist/del?id={$vo['id']}">删除</a>
+      {/volist}
+</body>
+</html>
