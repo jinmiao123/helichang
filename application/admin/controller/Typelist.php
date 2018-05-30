@@ -19,7 +19,7 @@ class Typelist extends Controller {
         $model = new Type();
         $type = $model->typeList();
         $this->assign('type', $type);
-        return view();
+        return view('setting');
     }
 /*
  * 页面展示：增加类型add->addType 增加参数add2->addParam 修改类型edit->editType 修改参数edit2->editParam
@@ -27,35 +27,6 @@ class Typelist extends Controller {
  * $date = input()获取数据
  * 逻辑 1调用index.heml 2点击添加跳转add.html 3引用addType.function
  */
-    public function add()
-    {
-        return view();
-    }
-    public function add2()
-    {
-        $this->assign('typeid',input('typeid'));
-        return view();
-    }
-    public function edit()
-    {
-        $this->assign([
-            'typeid' => input('typeid'),
-            'typename' => input('typename'),
-            'function' => input('function'),
-            'note' => input('note'),
-        ]);
-        return view();
-    }
-    public function edit2()
-    {
-        $this->assign([
-            'id' => input('id'),
-            'typeid' => input('typeid'),
-            'paramname' => input('paramname'),
-        ]);
-        return view();
-    }
-
     //添加type类型
     public function addType()
     {
@@ -74,6 +45,15 @@ class Typelist extends Controller {
     //添加param参数
     public function addParam()
     {
+        /*
+         * 前端格式array (size=1)
+              'paramname' =>
+               array (size=4)
+               0 => string '1' (length=1)
+              'typeid' => string '5' (length=1)
+               1 => string '2' (length=1)
+               2 => string '3' (length=1)
+         */
         $date = input(); //获取参数
         $model = new Param(); //实例化模型
         $param = $model->addParam($date); //调用param(model)中的addparam(function) 传参
@@ -122,16 +102,29 @@ class Typelist extends Controller {
         /*
          * 逻辑：1获取id 2根据不同id进行del操作 3只要删除有成功 则为删除成功
          */
-        $typeid = input('typeid');
-        $paramid = input('id');
+        $typeid = input("typeid");
         $model = new Type();
-        $model2 = new Param();
         $type = $model->delType($typeid);
-        $param = $model2->delParam($paramid);
-        if($type || $param) {
-            return $this->success('删除成功','index');
+        if($type) {
+            return json(["code" =>200,"msg"=>"删除成功"]);
         } else{
-            return $this->error('删除失败');
+            return json(["code" =>400,"msg"=>"删除失败"]);
+        }
+    }
+
+    // param
+    public function delParam()
+    {
+        /*
+         * 逻辑：1获取id 2根据不同id进行del操作 3只要删除有成功 则为删除成功
+         */
+        $paramid = input("id");
+        $model = new Param();
+        $param = $model->delParam($paramid);
+        if($param) {
+            return json(["code" =>200,"msg"=>"删除成功"]);
+        } else{
+            return json(["code" =>400,"msg"=>"删除失败"]);
         }
     }
 

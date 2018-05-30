@@ -1,20 +1,570 @@
-<html>
+  <!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>资讯</title>
+    <title>1号房产后台管理系统</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <meta charset="UTF-8">
+    <meta name="description" content="Admin Dashboard Template"/>
+    <meta name="keywords" content="admin,dashboard"/>
+    <link rel="stylesheet" href="__STATIC__/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/css/information.css">
+    <link href="__STATIC__/css/modal.css" rel="stylesheet" type="text/css"/>
+    <link href="__STATIC__/plugins/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" type="text/css"/>
+    <link href="__STATIC__/plugins/ueditor/themes/default/css/ueditor.min.css" rel="stylesheet" type="text/css"/>
+    <link href="__STATIC__/plugins/image-upload/webuploader.css" rel="stylesheet" type="text/css"/>
+    <link href="__STATIC__/plugins/image-upload/upload.css" rel="stylesheet" type="text/css"/>
+    <script src="__STATIC__/js/jquery-3.3.1.min.js"></script>
+    <script src="__STATIC__/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="__STATIC__/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js"></script>
+    <script src="__STATIC__/plugins/ueditor/ueditor.config.js"></script>
+    <script src="__STATIC__/plugins/ueditor/ueditor.all.js"></script>
+    <script src="__STATIC__/plugins/ueditor/lang/zh-cn.js"></script>
+    <script src="__STATIC__/plugins/image-upload/webuploader.js"></script>
+    <script src="__STATIC__/plugins/image-upload/upload.js"></script>
+    <script src="__STATIC__/js/pages/zixun.js"></script>
+    <style>
+        input::-webkit-inner-spin-button{
+            -webkit-appearance: none !important;
+            margin: 0;
+        }
+        .hover{
+            background: #33c8bd;
+            color: #fff;
+        }
+        /*gxh加了此样式为了让input(number)失去上下箭头*/
+    </style>
 </head>
 <body>
-      <a href="__ROOT__/admin/Articlelist/add">添加</a>
-      {volist name='article' id='vo'}
-      <h1>{$vo['title']}</h1>
-      简介：{$vo['description']} <br/>
-      关键字：{$vo['keywords']} <br/>
-      作者：{$vo['author']} <br/>
-      时间：{$vo['inputtime']}<br/>
-      来源：{$vo['copyfrom']}<br/>
-      缩略图：<img src="__ROOT__/uploads/{$vo['thumbnail']}" style="width: 50px;"/><br/>
-      <a href="__ROOT__/admin/Articlelist/edit?id={$vo['id']}">编辑</a>
-      <a href="__ROOT__/admin/Articlelist/del?id={$vo['id']}">删除</a>
-      {/volist}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 infor_head">
+            <span>首页</span>
+            <button class="btn infor_btn_1">资讯管理
+                <a href="#" class="glyphicon glyphicon-remove" onclick="document.close()"></a>
+            </button>
+        </div>
+    </div>
+    <div class="table-responsive infor_list">
+        <table class="table table-striped table-hover infor_table">
+            <caption class="caption">资讯列表
+                <ul class="infor_head_list">
+                    <li>
+                        <span class="btn btn-default infor_add" data-toggle="modal" data-target="#myModal">
+                            <span class="glyphicon glyphicon-plus plus"></span>
+                            新增资讯
+                        </span>
+                    </li>
+                    <li class="dropdown">
+                        <a class="btn btn-default dropdown-toggle" data-toggle="dropdown"><?php echo (empty($typename))? '栏目类型':$typename; ?>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu infor_menu">
+                            <li>
+                                <a href="__ROOT__/admin/Articlelist/index?typeid=0&status={$status}&author={$author}">栏目类型</a>
+                            </li>
+                            {volist name='type' id='vo'}
+                            <li>
+                                <a href="__ROOT__/admin/Articlelist/index?typeid={$vo['type_id']}&status={$status}&author={$author}">{$vo['name']}</a>
+                            </li>
+                            {/volist}
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <span class="btn btn-default dropdown-toggle" data-toggle="dropdown"><?php if($status==2){echo '状态';}else{echo ($status=='1')?'已审核':'未审核';} ?>
+                            <span class="caret"></span>
+                        </span>
+                        <ul class="dropdown-menu check_menu">
+                            <li>
+                                <a href="__ROOT__/admin/Articlelist/index?typeid={$typeid}&status=2&author={$author}">状态</a>
+                            </li>
+                            <li>
+                                <a href="__ROOT__/admin/Articlelist/index?typeid={$typeid}&status=1&author={$author}">已审核</a>
+                            </li>
+                            <li>
+                                <a href="__ROOT__/admin/Articlelist/index?typeid={$typeid}&status=0&author={$author}">未审核</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span class="btn btn-default">发布人
+                            <span class="caret"></span>
+                        </span>
+                    </li>
+                    <li>
+                        <form method="post" name="articleadd" enctype="multipart/form-data" action="__ROOT__/admin/Articlelist/index">
+                        <input class="btn btn-default btn-sm" type="text" placeholder="请输入ID/名称" name="name">
+                        <input class="btn btn-primary" type="submit" value="搜索">
+                        </form>
+                    </li>
+                </ul>
+            </caption>
+            <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" class="infor_checkbox checkbox_all">
+                </th>
+                <th>
+                    ID
+                </th>
+                <th class="col-md-4 text_left" >
+                    名称
+                </th>
+                <th>
+                    发布人
+                </th>
+
+                <th>
+                    评论
+                </th>
+                <th>
+                    栏目
+                </th>
+                <th>
+                    点击
+                </th>
+                <th>
+                    审核
+                </th>
+                <th>
+                    添加时间
+                </th>
+                <th>
+                    操作
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name='article' id='vo'}
+            <tr>
+                <td>
+                    <input type="checkbox" class="infor_checkbox" value="{$vo['id']}">
+                </td>
+                <td>{$vo['id']}</td>
+                <td class="text_left">
+                    <a href="#" data-toggle="modal" data-target="#reviewinfo">{$vo['title']}</a>
+                </td>
+                <td>{$vo['author']}</td>
+                <td>
+                    <div style="position: relative">
+                        <div class="discuss_cot"></div>
+                        <a class="discuss">[555]</a>
+                    </div>
+                </td>
+                <td>{$vo['name']}</td>
+                <td>{$vo['allhits']}</td>
+                <td>
+                    <label class="btn-open">
+                        <input class="mui-switch" type="checkbox"  value="{$vo['id']}" <?php echo ($vo['status']==1)? 'checked':''; ?>  >
+                    </label>
+                </td>
+                <td>{$vo['inputtime']}</td>
+                <td class="operate">
+                    <span class=" btn  btn-primary btn-sm" data-toggle="modal" data-target="#ModalModify">
+                        修改
+                    </span>
+                    <span class=" btn btn-danger btn-sm only_del" data-toggle="modal" data-target="#infoexit">
+                        <a href="__ROOT__/admin/Articlelist/del?id={$vo['id']}" style="text-decoration: none;color:#fff;">删除</a>
+                    </span>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+        <ul class="btn-group infor_btn_list">
+            <li>
+                <span class="btn btn-danger choice-del">批量删除</span>
+            </li>
+            <li>
+                <span class="btn btn-primary choice-checked">批量审核</span>
+            </li>
+            <li>
+                <span class="btn btn-primary choice-dechecked">批量解审</span>
+                <!--郭昕华增加了choice-dechecked-->
+            </li>
+        </ul>
+
+        <ul class="page_group">
+            <li style="margin-top:10px;">
+                共
+                <span style="color:red;">{$pages}</span>页/
+                <span style="color:red;">{$count}</span>条数据
+            </li>
+            <li class="page_group_li" id="page">
+            </li>
+            <li>
+                <form method="post" name="articleadd" enctype="multipart/form-data" action="__ROOT__/admin/Articlelist/index?typeid={$typeid}&status={$status}&author={$author}" >
+                <span>跳至</span>
+                <input type="number" min="1" max="{$pages}" class="btn btn-default " style="margin:0 10px 0;width:55px;height:30px;" name="page" value="{$page}">页
+                <input class="btn btn-primary btn-sm go" style="margin-left: 10px" type="submit" value="GO">
+                </form>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--add news Modal --start-->
+<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog"
+     aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myLargeModalLabel">新增资讯</h4>
+            </div>
+            <form class="form-horizontal" method="post" name="articleadd" enctype="multipart/form-data" action="__ROOT__/admin/Articlelist/addart">
+            <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">栏目：</label>
+                                <div class="col-sm-9">
+                                    <select name="type" class="form-control">
+                                        {volist name='type' id='vo'}
+                                        <option value="{$vo['type_id']}">{$vo['name']}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label  class="col-sm-3 control-label">发布日期：</label>
+                                <div class="col-sm-9">
+                                    <div class="form-calendar">
+                                        <input type="text" class="form-control date-picker"  name="inputtime">
+                                        <span class="icon-calendar glyphicon glyphicon-calendar">&nbsp;</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"><span class="text-danger">*</span>标题：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="title" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">关键词：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="keywords">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">来源：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="copyfrom">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">楼盘关联：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="house">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label  class="col-sm-3 control-label">描述：</label>
+                                <div class="col-sm-9">
+                                    <textarea class="form-control" rows="3" name="description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">缩略图：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" name="thumbnail">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <script id="container" name="content" type="text/plain" >这里写你的初始化内容......
+                </script>
+            </div>
+            <div class="modal-footer text-center">
+                <div class="text-center"><input type="submit" value="发布" class="btn btn-primary"></div>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--add information Modal --end-->
+<!--modify information Modal --start-->
+<div class="modal fade bs-example-modal-lg" id="ModalModify" tabindex="-1" role="dialog"
+     aria-labelledby="modifyModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="modifyModalLabel">修改资讯</h4>
+            </div>
+            <form class="form-horizontal" method="post" name="articleadd" enctype="multipart/form-data" action="addart">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">栏目：</label>
+                                <div class="col-sm-3">
+                                    <select name="type" class="form-control">
+                                        {volist name='type' id='vo'}
+                                        <option value="{$vo['type_id']}">{$vo['name']}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label  class="col-sm-3 control-label">发布日期：</label>
+                                <div class="col-sm-3">
+                                    <div class="form-calendar">
+                                        <input type="text" class="form-control date-picker"  name="inputtime">
+                                        <span class="icon-calendar glyphicon glyphicon-calendar">&nbsp;</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label"><span class="text-danger">*</span>标题：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" name="title">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">关键词：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" name="keywords">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">来源：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" name="copyfrom">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">楼盘关联：</label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" name="house">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label  class="col-sm-3 control-label">描述：</label>
+                                <div class="col-sm-6">
+                                    <textarea class="form-control" rows="3" name="description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">缩略图：</label>
+                                <div class="col-sm-8">
+                                    <!--images uploader-start-->
+                                    <div id="uploader" class="modal-uploader">
+                                        <div class="queueList">
+                                            <div id="dndArea" class="placeholder">
+                                                <div id="filePicker"></div>
+                                            </div>
+                                        </div>
+                                        <div class="statusBar" style="display:none;">
+                                            <div class="progress">
+                                                <span class="text">0%</span>
+                                                <span class="percentage"></span>
+                                            </div><div class="info"></div>
+                                            <div class="btns">
+                                                <div id="filePicker2"></div><div class="uploadBtn">开始上传</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--images uploader-end-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script id="container2" name="content" type="text/plain" style="height: 280px" >可编辑的内容.....</script>
+                </div>
+                <div class="modal-footer text-center">
+                    <div class="text-center"><input type="submit" value="发布" class="btn btn-primary"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--modify information Modal --end-->
+<!--review news Modal --start-->
+<div class="modal fade bs-example-modal-lg" id="reviewinfo" tabindex="-1" role="dialog"
+     aria-labelledby="myreviewinfo">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myreviewinfo">预览</h4>
+            </div>
+            <div class="modal-body">
+                <div class="h1 text-center">年内楼市调控逾120次 住建部盯紧“冒头”城市</div>
+                <div class="text-muted text-center info-date">2018年05月17日  08:33 证券日报</div>
+                <div class="info-content">
+                    <p>先有“五一”小长假前，住建部约谈西安、海口、三亚、长春、哈尔滨、昆明、大连、贵阳、徐州、佛山等10个城市政府负责人。随后在5月9日，住建部就房地产市场调控继续约谈成都、太原两市政府负责人，并强调“房子是用来住的，不是用来炒的”定位，要坚持房地产调控目标不动摇、力度不放松。与此同时，针对当前住房公积金在贷款买房过程中出现的一些违法违规乱象，住建部联合财政部、人民银行、公安部发布《关于开展治理违规提取住房公积金工作的通知》。未来楼市调控的从严主基调将会继续贯穿下去。</p>
+                    <p>
+                        昨日，58安居客房产研究院首席分析师张波在接受《证券日报》记者采访时表示，从近期住建部的一系列举措可以看到，监管层对楼市长效机制的建设是连续且坚定的。而从近期住建部约谈的12个城市来看，在国家统计局公布的数据中，这些城市的房价都在3月份、4月份有明显上涨，由于其热度较高、投 资需求旺盛，所以刺激了房价。此轮约谈，一方面展现出监管层对于未来继续从严调控的信心以及进一步巩固调控成果的决心，另一方面也是促进楼市平稳健康发展。
+                    </p>
+                    <p>
+                        据不完全统计，年内发布有关房地产调控政策已多达120次。在中原地产首席分析师张大伟看来，与2017年调控政策主要集中在北京等一线城市相比，今年前四个月的调控措施主要呈现出以下几个新特点：一是调控城市分布出现了明显变化，2017年调控政策主要集中在一、二线城市，2018年则逐渐向三、四线转移。二是从政策内容看，本轮调控政策最典型的是热点城市购房出现刚需优先摇号选择限价房，同时，住房公积金等政策开启普惠式调整。三是房地产调控政策与鼓励人才落户并存。据不完全统计，目前全国已经有逾50个城市发布了超过该地区历史力度的人才吸引政策。
+                    </p>
+                    <p>
+                        张波认为，房价上涨的一个主要原因是购房需求的增加。部分热点二线城市从去年开始积极出台人才的**政策，必然会带来大量的购房需求。而随着需求的增长，房价下跌的可能性进一步较小。因此，从房地产市场长效机制建设来看，这类城市或将出台相应的调控政策，一是升级限购限售等政策，来达到“房住不炒”的调控目的；二是规范房地产市场行为。预计在“因城施策、分类调控”的指导思想下，未来，对房价上涨过快的城市还会继续加强调控力度。
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="text-center"><button type="button" class="btn btn-primary">审核通过</button></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--review news Modal --end-->
+<!--delete news query Modal --start-->
+<div id="infoexit" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel">退出确定</h4>
+            </div>
+            <div class="modal-body">
+                <div class="info-danger">确定要退出登录吗？</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--delete news query Modal --end-->
+<script type="text/javascript">
+   //全选/反选 by zhuyan
+    $(function () {
+        $(".checkbox_all").on('click',function () {
+            if ($(this).is(':checked')){
+                $('.infor_checkbox').prop('checked',true);
+                $('.infor_table>tbody>tr').addClass('checked_background');
+            }else {
+                $('.infor_checkbox').prop('checked',false);
+                $('.infor_table>tbody>tr').removeClass('checked_background');
+        }
+        })
+    });
+
+
+//单选行变色
+$(function () {
+    $(".infor_checkbox").click(function(){
+        if ($(this).is(':checked')){
+            $(this).parent().parent().addClass("checked_background");
+        }else{
+            $(this).parent().parent().removeClass("checked_background");
+        }
+    });
+});
+
+    $(function () {
+        //页数html
+        var html='<a href="__ROOT__/admin/Articlelist/index?typeid={$typeid}&status={$status}&author={$author}&name={$name}&page='+(({$page}>1)?{$page}-1:1)+'"> <span class="btn btn-default btn-sm glyphicon glyphicon-menu-left"></span></a>';
+        var end=({$pages}>10)?10:{$pages};
+        var green='background: #33c8bd;color: #fff;';
+        var white='';
+        var start=1;
+        if({$page}>5&&{$pages}>{$page}+4){
+            start={$page}-5;
+            end={$page}+4;
+        }
+        if({$page}>5&&(!({$pages}>{$page}+4))){
+            start=({$pages}-9)>0?{$pages}-9:1;
+            end={$pages};
+        }
+
+        for(i=start;i<=end;i++){
+            html=html+'<a href="__ROOT__/admin/Articlelist/index?typeid={$typeid}&status={$status}&author={$author}&name={$name}&page='+i+'"><span class="btn btn-default btn-sm" style="'+(({$page}==i)?green:white)+'">'+i+'</span></a>';
+        }
+        html=html+'<a href="__ROOT__/admin/Articlelist/index?typeid={$typeid}&status={$status}&author={$author}&name={$name}&page='+(({$page}>end-1)?{$page}:{$page}+1)+'"> <span class="btn btn-default btn-sm glyphicon glyphicon-menu-right"></span></a>';
+
+        $('#page').html(html);
+
+        //批量删除
+        $('.choice-del').click(function () {
+//            $('.infor_checkbox:checked').parent().parent().fadeOut('show');
+            var groupCheckbox=$("input[class='infor_checkbox']");
+            var val='';
+            for(i=0;i<groupCheckbox.length;i++){
+                if(groupCheckbox[i].checked){
+                    var temp =groupCheckbox[i].value;
+                    val=val+temp+'|';
+                }
+            }
+            window.location.href='__ROOT__/admin/Articlelist/del?ids='+val;
+        });
+        //批量审核
+        $('.choice-checked').click(function () {
+            var groupCheckbox=$("input[class='infor_checkbox']");
+            var val='';
+            for(i=0;i<groupCheckbox.length;i++){
+                if(groupCheckbox[i].checked){
+                    var temp =groupCheckbox[i].value;
+                    val=val+temp+'|';
+                }
+            }
+            window.location.href='__ROOT__/admin/Articlelist/review?status=1&ids='+val;
+        });
+        //批量解审
+        $('.choice-dechecked').click(function () {
+            var groupCheckbox=$("input[class='infor_checkbox']");
+            var val='';
+            for(i=0;i<groupCheckbox.length;i++){
+                if(groupCheckbox[i].checked){
+                    var temp =groupCheckbox[i].value;
+                    val=val+temp+'|';
+                }
+            }
+            window.location.href='__ROOT__/admin/Articlelist/review?status=0&ids='+val;
+        });
+        //单独审核解审
+        $('.mui-switch').click(function(){
+            window.location.href='__ROOT__/admin/Articlelist/review?typeid={$typeid}&status={$status}&author={$author}&name={$name}&page={$page}&id='+$(this).val();
+        });
+
+//        //单一删除
+//        $('.only_del').click(function () {
+//            $(this).parent().parent().fadeOut('show');
+//        })
+    });
+
+
+
+</script>
 </body>
 </html>

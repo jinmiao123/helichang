@@ -7,6 +7,6 @@ class Index extends  Controller
 {
     public function index()
     {
-        echo '后台主页';
+        return View();
     }
 }
