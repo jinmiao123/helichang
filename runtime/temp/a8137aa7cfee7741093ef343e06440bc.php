@@ -1,3 +1,4 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:78:"D:\wamp64\www\helichang\public/../application/admin\view\typelist\setting.html";i:1527649165;}*/ ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,18 +6,18 @@
     <title>一号房产</title>
     <meta name="description" content="Admin Dashboard Template"/>
     <meta name="keywords" content="admin,dashboard"/>
-    <link rel="stylesheet" href="_CSS_/bootstrap.min.css">
-    <link rel="stylesheet" href="_CSS_/setting.css">
-    <link href="_CSS_/modal.css" rel="stylesheet" type="text/css"/>
-    <link href="_plugins_/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" type="text/css"/>
-    <link href="_plugins_/summernote-master/summernote.css" rel="stylesheet" type="text/css"/>
-    <script src="_JS_/jquery-3.3.1.min.js"></script>
-    <script src="_JS_/bootstrap.min.js"></script>
-    <script src="_plugins_/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <script src="_plugins_/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js"></script>
-    <script src="_plugins_/summernote-master/summernote.js"></script>
-    <script src="_plugins_/summernote-master/lang/summernote-zh-CN.min.js"></script>
-    <!--<script src="__STATIC__/js/pages/zixun.js"></script>-->
+    <link rel="stylesheet" href="/helichang/public/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/helichang/public/static/css/setting.css">
+    <link href="/helichang/public/static/css/modal.css" rel="stylesheet" type="text/css"/>
+    <link href="/helichang/public/static/plugins/bootstrap-datepicker/css/datepicker3.css" rel="stylesheet" type="text/css"/>
+    <link href="/helichang/public/static/plugins/summernote-master/summernote.css" rel="stylesheet" type="text/css"/>
+    <script src="/helichang/public/static/js/jquery-3.3.1.min.js"></script>
+    <script src="/helichang/public/static/js/bootstrap.min.js"></script>
+    <script src="/helichang/public/static/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="/helichang/public/static/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.zh-CN.js"></script>
+    <script src="/helichang/public/static/plugins/summernote-master/summernote.js"></script>
+    <script src="/helichang/public/static/plugins/summernote-master/lang/summernote-zh-CN.min.js"></script>
+    <!--<script src="/helichang/static/js/pages/zixun.js"></script>-->
 </head>
 <body>
 <div class="container-fluid">
@@ -36,33 +37,33 @@
                     <div class="col-sm-3">操作</div>
                 </div>
                 <div class="row tb-tr">
-                    {volist name='type' id='vo'}
+                    <?php if(is_array($type) || $type instanceof \think\Collection || $type instanceof \think\Paginator): $i = 0; $__LIST__ = $type;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?>
                     <div class="col-sm-12 tb-menu-1">
                         <div class="col-sm-5 text-left tr-category">
-                            <span class="glyphicon glyphicon-plus"></span> {$vo['typename']}
+                            <span class="glyphicon glyphicon-plus"></span> <?php echo $vo['typename']; ?>
                         </div>
-                        <div class="col-sm-2">{$vo['note']}</div>
-                        <div class="col-sm-2">{$vo['function']}</div>
-                        <span class="typeid" hidden="hidden"> {$vo['typeid']}</span>
+                        <div class="col-sm-2"><?php echo $vo['note']; ?></div>
+                        <div class="col-sm-2"><?php echo $vo['function']; ?></div>
+                        <span class="typeid" hidden="hidden"> <?php echo $vo['typeid']; ?></span>
                         <div class="col-sm-3">
-                            <span class="btn set-btn-primary addfenlei" data-toggle="modal" data-target="#set-add-er" typeid="{$vo['typeid']}">新增分类</span>
-                            <span class="btn set-btn-primary editfenlei" data-toggle="modal" data-target="#set-change" typeid="{$vo['typeid']}" tyname="{$vo['typename']}" note="{$vo['note']}" function="{$vo['function']}">修改</span>
-                            <span class="btn set-btn-danger delfenlei" data-toggle="modal" data-target="#set-del" typeid="{$vo['typeid']}">删除</span>
+                            <span class="btn set-btn-primary addfenlei" data-toggle="modal" data-target="#set-add-er" typeid="<?php echo $vo['typeid']; ?>">新增分类</span>
+                            <span class="btn set-btn-primary editfenlei" data-toggle="modal" data-target="#set-change" typeid="<?php echo $vo['typeid']; ?>" tyname="<?php echo $vo['typename']; ?>" note="<?php echo $vo['note']; ?>" function="<?php echo $vo['function']; ?>">修改</span>
+                            <span class="btn set-btn-danger delfenlei" data-toggle="modal" data-target="#set-del" typeid="<?php echo $vo['typeid']; ?>">删除</span>
                         </div>
                     </div>
                     <div class="col-sm-12 text-left">
-                        {volist name="vo['params']" id='vi'}
+                        <?php if(is_array($vo['params']) || $vo['params'] instanceof \think\Collection || $vo['params'] instanceof \think\Paginator): $i = 0; $__LIST__ = $vo['params'];if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vi): $mod = ($i % 2 );++$i;?>
                         <ul class="tr-menu-2">
-                            <li>{$vi['paramname']}
+                            <li><?php echo $vi['paramname']; ?>
                                 <span class="tb-tr-icontool">
-                                    <span class="glyphicon glyphicon-pencil editpencil" data-toggle="modal" data-target="#pencil" paramid="{$vi['id']}" paramname="{$vi['paramname']}"></span>
-                                    <span class="glyphicon glyphicon-remove-circle delpencil" data-toggle="modal" data-target="#set-del" paramid="{$vi['id']}"></span>
+                                    <span class="glyphicon glyphicon-pencil editpencil" data-toggle="modal" data-target="#pencil" paramid="<?php echo $vi['id']; ?>" paramname="<?php echo $vi['paramname']; ?>"></span>
+                                    <span class="glyphicon glyphicon-remove-circle delpencil" data-toggle="modal" data-target="#set-del" paramid="<?php echo $vi['id']; ?>"></span>
                                     </span>
                             </li>
                         </ul>
-                        {/volist}
+                        <?php endforeach; endif; else: echo "" ;endif; ?>
                     </div>
-                    {/volist}
+                    <?php endforeach; endif; else: echo "" ;endif; ?>
                 </div>
             </div>
         </div>
@@ -79,7 +80,7 @@
                 <p class="modal-title" id="mynewsCase">新增方案</p>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" action="{:url('admin/Typelist/addType')}" method="post">
+                <form class="form-horizontal" action="<?php echo url('admin/Typelist/addType'); ?>" method="post">
                     <div class="row">
                         <div class="col-sm-11">
                             <div class="form-group">
@@ -130,7 +131,7 @@
                 <p class="modal-title" id="mynewsFL">新增分类</p>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" action="{:url('admin/Typelist/addParam')}" method="post">
+                <form class="form-horizontal" action="<?php echo url('admin/Typelist/addParam'); ?>" method="post">
                     <div class="row">
                         <div class="col-sm-12" id="form">
                             <div class="form-group">
@@ -167,7 +168,7 @@
                 <p class="modal-title" id="mychangeCase">修改方案</p>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" action="{:url('admin/Typelist/editType')}" method="post">
+                <form class="form-horizontal" action="<?php echo url('admin/Typelist/editType'); ?>" method="post">
                     <div class="row">
                         <div class="col-sm-11">
                             <div class="form-group">
@@ -242,7 +243,7 @@
                 <p class="modal-title" id="mypencil">修改分类</p>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" action="{:url('admin/Typelist/editParam')}" method="post">
+                <form class="form-horizontal" action="<?php echo url('admin/Typelist/editParam'); ?>" method="post">
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
@@ -304,13 +305,13 @@
     })
     function delparam(id) {
         $.ajax({
-            url:"{:url('admin/Typelist/delParam')}",
+            url:"<?php echo url('admin/Typelist/delParam'); ?>",
             type:'post',
             'dataType':'json',
             'data':{id : id},
             success:function(data) {
                 if (data.code == 200) {
-                    location.href = "{:url('admin/Typelist/index')}";
+                    location.href = "<?php echo url('admin/Typelist/index'); ?>";
                 } else {
                     alert("删除失败")
                 }
@@ -320,13 +321,13 @@
 
     function del(typeid) {
         $.ajax({
-            url:"{:url('admin/Typelist/delType')}",
+            url:"<?php echo url('admin/Typelist/delType'); ?>",
             type:'post',
             'dataType':'json',
             'data':{typeid : typeid},
             success:function(data){
                 if (data.code == 200) {
-                    location.href = "{:url('admin/Typelist/index')}";
+                    location.href = "<?php echo url('admin/Typelist/index'); ?>";
                 } else {
                     alert("删除失败")
                 }
