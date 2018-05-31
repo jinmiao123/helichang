@@ -9,9 +9,14 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
+//use think\Route;
+////url 请求setting
+//Route::rule('setting','admin/typelist/index');
+
+
 return [
     '__pattern__' => [
-        'name' => '\w+',
+        'name' => '\w+', //设置name变量规则采用正则定义
     ],
     '[hello]'     => [
         ':id'   => ['index/hello', ['method' => 'get'], ['id' => '\d+']],
